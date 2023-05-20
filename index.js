@@ -52,12 +52,26 @@ async function run() {
     // get data by id 
     app.get('/toydetails/:id', async(req, res) => {
       const id = req.params.id;
-      // console.log('hitting route', id)
       const qurey = {_id: new ObjectId(id)}
       const result = await animalToyCollection.findOne(qurey)
       res.send(result)
     })
 
+
+    // get my toys data 
+    app.get('/mytoys', async(req, res) => {
+      console.log(req.query.email)
+
+      let query = {}
+      if(req.query.email){
+        query = {sellerEmail: req.query.email}
+      }
+
+      const result = await animalToyCollection.find(query).toArray();
+      res.send(result)
+
+      
+    })
 
 
     app.post("/animaltoy", async (req, res) => {

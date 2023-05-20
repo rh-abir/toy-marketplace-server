@@ -31,10 +31,29 @@ async function run() {
       .db("animalToysDB")
       .collection("animalToy");
 
+    const indexKeys = { toyName: 1 };
+    const indexOptions = { name: "toyName" };
+    const result = await animalToyCollection.createIndex(
+      indexKeys,
+      indexOptions
+    );
+
     //  get all data
-    app.get("/allAnimalData", async (req, res) => {
+    app.get("/alltoysData", async (req, res) => {
       const result = await animalToyCollection.find().toArray();
       res.send(result);
+    });
+
+    app.get("/toySearchByName/:text", async (req, res) => {
+      const searchText = req.params.text;
+      console.log(searchText);
+
+      const qurey = { toyName: { $regex: searchText, $options: "i" } };
+
+      const result = await animalToyCollection.find(qurey).toArray();
+      res.send(result)
+
+
     });
 
     // get data by category
@@ -84,22 +103,22 @@ async function run() {
           ...body,
         },
       };
-      const result = await animalToyCollection.updateOne(filter, updateData, options)
-      res.send(result)
+      const result = await animalToyCollection.updateOne(
+        filter,
+        updateData,
+        options
+      );
+      res.send(result);
     });
 
-
-
     // delete toy by id
-    app.delete('/deletetoy/:id', async(req, res) => {
+    app.delete("/deletetoy/:id", async (req, res) => {
       const id = req.params.id;
-      
-      const qurey = {_id: new ObjectId(id)}
+
+      const qurey = { _id: new ObjectId(id) };
       const result = await animalToyCollection.deleteOne(qurey);
-      res.send(result)
-    })
-
-
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

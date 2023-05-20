@@ -31,53 +31,65 @@ async function run() {
       .db("animalToysDB")
       .collection("animalToy");
 
+    //  get all data
+    app.get("/allAnimalData", async (req, res) => {
+      const result = await animalToyCollection.find().toArray();
+      res.send(result);
+    });
 
-
-    //  get all data 
-    app.get('/allAnimalData', async(req, res) => {
-      const result = await animalToyCollection.find().toArray()
-      res.send(result)
-    })
-
-    // get data by category 
-    app.get('/category/:name', async(req, res) => {
+    // get data by category
+    app.get("/category/:name", async (req, res) => {
       const categoryName = req.params.name;
-      const qurey = {category: categoryName}
+      const qurey = { category: categoryName };
 
-      const result = await animalToyCollection.find(qurey).toArray()
-      res.send(result)
+      const result = await animalToyCollection.find(qurey).toArray();
+      res.send(result);
+    });
 
-    })
-
-    // get data by id 
-    app.get('/toydetails/:id', async(req, res) => {
+    // get data by id
+    app.get("/toydetails/:id", async (req, res) => {
       const id = req.params.id;
-      const qurey = {_id: new ObjectId(id)}
-      const result = await animalToyCollection.findOne(qurey)
-      res.send(result)
-    })
+      const qurey = { _id: new ObjectId(id) };
+      const result = await animalToyCollection.findOne(qurey);
+      res.send(result);
+    });
 
-
-    // get my toys data 
-    app.get('/mytoys', async(req, res) => {
-      console.log(req.query.email)
-
-      let query = {}
-      if(req.query.email){
-        query = {sellerEmail: req.query.email}
+    // get my toys data by email
+    app.get("/mytoys", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = { sellerEmail: req.query.email };
       }
 
       const result = await animalToyCollection.find(query).toArray();
-      res.send(result)
+      res.send(result);
+    });
 
-      
-    })
-
-
+    // post toy
     app.post("/animaltoy", async (req, res) => {
       const body = req.body;
       const result = await animalToyCollection.insertOne(body);
       res.send(result);
+    });
+
+    // update toy
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateData = {
+        $set: {
+          ...body,
+        },
+      };
+
+
+      const result = await animalToyCollection.updateOne(filter, updateData, options)
+      res.send(result)
+
+
     });
 
     // Send a ping to confirm a successful connection

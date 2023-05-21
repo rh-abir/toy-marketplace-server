@@ -51,9 +51,7 @@ async function run() {
       const qurey = { toyName: { $regex: searchText, $options: "i" } };
 
       const result = await animalToyCollection.find(qurey).toArray();
-      res.send(result)
-
-
+      res.send(result);
     });
 
     // get data by category
@@ -83,6 +81,28 @@ async function run() {
       const result = await animalToyCollection.find(query).toArray();
       res.send(result);
     });
+
+
+
+    // get my toys data by asc dsc
+    app.get('/mytoysAscDsc', async(req, res) => {
+
+      
+      let sortData = req.query.sort 
+
+      if(sortData === "ASCENDING"){
+        const result = await animalToyCollection.find({ sellerEmail: req.query.email }).sort({Price: -1 }).toArray();
+        res.send(result);
+      }
+     else{
+      const result = await animalToyCollection.find({ sellerEmail: req.query.email }).sort({Price: 1 }).toArray();
+      res.send(result);
+     }
+      
+    })
+
+
+
 
     // post toy
     app.post("/animaltoy", async (req, res) => {

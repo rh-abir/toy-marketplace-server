@@ -6,8 +6,14 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // midlewar
+const corsOptions ={
+  origin:'*', 
+  credentials:true,
+  optionSuccessStatus:200,
+}
 
-app.use(cors());
+app.use(cors(corsOptions))
+
 app.use(express.json());
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");

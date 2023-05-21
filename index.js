@@ -91,11 +91,11 @@ async function run() {
       let sortData = req.query.sort 
 
       if(sortData === "ASCENDING"){
-        const result = await animalToyCollection.find({ sellerEmail: req.query.email }).sort({Price: -1 }).toArray();
+        const result = await animalToyCollection.find({ sellerEmail: req.query.email }).sort({priceNum: -1 }).toArray();
         res.send(result);
       }
      else{
-      const result = await animalToyCollection.find({ sellerEmail: req.query.email }).sort({Price: 1 }).toArray();
+      const result = await animalToyCollection.find({ sellerEmail: req.query.email }).sort({priceNum: 1 }).toArray();
       res.send(result);
      }
       

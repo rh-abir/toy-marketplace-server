@@ -31,13 +31,7 @@ async function run() {
       .db("animalToysDB")
       .collection("animalToy");
 
-    const indexKeys = { toyName: 1 };
-    const indexOptions = { name: "toyName" };
-    const result = await animalToyCollection.createIndex(
-      indexKeys,
-      indexOptions
-    );
-
+ 
     //  get all data
     app.get("/alltoysData", async (req, res) => {
       const result = await animalToyCollection.find().toArray();
@@ -87,7 +81,7 @@ async function run() {
     // get my toys data by asc dsc
     app.get('/mytoysAscDsc', async(req, res) => {
 
-      
+
       let sortData = req.query.sort 
 
       if(sortData === "ASCENDING"){
